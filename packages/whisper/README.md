@@ -15,8 +15,33 @@ Capacitor plugin for on-device speech recognition using Whisper.cpp with native 
 
 ## Installation
 
+### From GitHub Repository
+
+```bash
+# Install directly from GitHub repository
+npm install https://github.com/ceramicwhite/capacitor-mlkit.git#main --save
+# or install the specific whisper package
+npm install git+https://github.com/ceramicwhite/capacitor-mlkit.git#main:packages/whisper
+
+# Sync with your Capacitor project
+npx cap sync
+```
+
+### From npm (when published)
+
 ```bash
 npm install @capacitor-mlkit/whisper
+npx cap sync
+```
+
+### Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/ceramicwhite/capacitor-mlkit.git
+
+# Install from local path
+npm install ./capacitor-mlkit/packages/whisper
 npx cap sync
 ```
 
@@ -24,18 +49,46 @@ npx cap sync
 
 ### 1. Add Whisper Model to your iOS App Bundle
 
-Download your preferred Whisper model and add it to your iOS project:
+You can use either GGML models (whisper.cpp format) or Core ML models (optimized for iOS):
+
+#### Option A: GGML Models (whisper.cpp format)
+
+Download standard whisper.cpp models:
 
 ```bash
-# Download a model (example: base.en model)
+# Download a model (example: base.en model ~74MB)
 curl -L -o ggml-base.en.bin https://huggingface.co/ggml-org/whisper.cpp/resolve/main/ggml-base.en.bin
+
+# Other available models:
+# curl -L -o ggml-tiny.en.bin https://huggingface.co/ggml-org/whisper.cpp/resolve/main/ggml-tiny.en.bin
+# curl -L -o ggml-small.en.bin https://huggingface.co/ggml-org/whisper.cpp/resolve/main/ggml-small.en.bin
 ```
 
-Add the `.bin` file to your iOS project bundle through Xcode:
+#### Option B: Core ML Models (Recommended for iOS)
+
+For optimal performance on iOS, use Core ML models from WhisperKit:
+
+```bash
+# Download Core ML models (better performance on iOS)
+# Base English model (~74MB)
+curl -L -o openai_whisper-base.en.mlmodelc.zip https://huggingface.co/argmaxinc/whisperkit-coreml/resolve/main/openai_whisper-base.en/openai_whisper-base.en.mlmodelc.zip
+unzip openai_whisper-base.en.mlmodelc.zip
+
+# Tiny English model (~39MB) - fastest
+# curl -L -o openai_whisper-tiny.en.mlmodelc.zip https://huggingface.co/argmaxinc/whisperkit-coreml/resolve/main/openai_whisper-tiny.en/openai_whisper-tiny.en.mlmodelc.zip
+
+# Small English model (~244MB) - better accuracy
+# curl -L -o openai_whisper-small.en.mlmodelc.zip https://huggingface.co/argmaxinc/whisperkit-coreml/resolve/main/openai_whisper-small.en/openai_whisper-small.en.mlmodelc.zip
+```
+
+#### Add Model to Xcode Project
+
+Add the model file to your iOS project bundle:
 1. Open your iOS project in Xcode (`npx cap open ios`)
-2. Drag the `ggml-base.en.bin` file into your project
-3. Ensure "Add to target" is checked for your app target
-4. Ensure "Copy items if needed" is checked
+2. Drag the model file (`.bin` or `.mlmodelc`) into your project
+3. ✅ Ensure "Add to target" is checked for your app target
+4. ✅ Ensure "Copy items if needed" is checked
+5. ✅ For `.mlmodelc` files, ensure they're added as folder references (blue folder icon)
 
 ### 2. Update Info.plist
 
@@ -175,8 +228,9 @@ Request microphone permission.
 
 ## Supported Models
 
-The plugin supports all standard Whisper models:
+The plugin supports both GGML (whisper.cpp) and Core ML models:
 
+### GGML Models (whisper.cpp format)
 - **tiny** (39 MB) - Fastest, lowest accuracy
 - **tiny.en** (39 MB) - English-only, faster than multilingual tiny
 - **base** (74 MB) - Good balance of speed and accuracy
@@ -186,14 +240,24 @@ The plugin supports all standard Whisper models:
 - **medium** (769 MB) - High accuracy, slower processing
 - **large-v3** (1550 MB) - Highest accuracy, slowest processing
 
+### Core ML Models (iOS Optimized)
+Available from [WhisperKit Core ML Models](https://huggingface.co/argmaxinc/whisperkit-coreml):
+- **openai_whisper-tiny.en** (39 MB) - Hardware-accelerated tiny model
+- **openai_whisper-base.en** (74 MB) - Hardware-accelerated base model
+- **openai_whisper-small.en** (244 MB) - Hardware-accelerated small model
+- **openai_whisper-large-v3** (1550 MB) - Hardware-accelerated large model
+
+> **Recommendation**: Use Core ML models (`.mlmodelc`) for best performance on iOS devices with Apple Neural Engine acceleration.
+
 ## Performance Tips
 
-1. **Use English-only models** when possible for better performance
-2. **Start with smaller models** (tiny, base) and upgrade if needed
-3. **Enable Core ML** for significant performance improvements on iOS
-4. **Preload models** during app initialization for faster transcription
-5. **Use appropriate thread counts** based on device capabilities
-6. **Consider quantized models** for reduced memory usage
+1. **Use Core ML models** (`.mlmodelc`) for maximum performance on iOS
+2. **Use English-only models** when possible for better performance
+3. **Start with smaller models** (tiny, base) and upgrade if needed
+4. **Enable Core ML acceleration** for significant performance improvements
+5. **Preload models** during app initialization for faster transcription
+6. **Use appropriate thread counts** based on device capabilities
+7. **Consider model size vs accuracy tradeoffs** based on your use case
 
 ## Error Handling
 

@@ -1,8 +1,5 @@
-import nodeResolve from '@rollup/plugin-node-resolve';
-
 export default {
   input: 'dist/esm/index.js',
-  external: ['@capacitor/core'],
   output: [
     {
       file: 'dist/plugin.js',
@@ -21,9 +18,5 @@ export default {
       inlineDynamicImports: true,
     },
   ],
-  plugins: [
-    nodeResolve({
-      browser: true,
-    }),
-  ],
+  external: ['@capacitor/core'],
 };

@@ -7,17 +7,16 @@ import type {
   LoadModelOptions, 
   ModelInfo, 
   IsSupportedResult, 
-  PermissionStatus,
-  TranscriptionErrorCode
+  PermissionStatus
 } from './definitions';
 
 export class WhisperWeb extends WebPlugin implements WhisperPlugin {
-  async transcribeFile(options: TranscribeFileOptions): Promise<TranscribeResult> {
+  async transcribeFile(_options: TranscribeFileOptions): Promise<TranscribeResult> {
     console.warn('Whisper transcription is not available on web. Consider using a cloud-based solution or WebAssembly implementation.');
     throw this.unimplemented('Not implemented on web. Use the native iOS/Android implementation for optimal performance.');
   }
 
-  async loadModel(options: LoadModelOptions): Promise<void> {
+  async loadModel(_options: LoadModelOptions): Promise<void> {
     console.warn('Model loading is not available on web.');
     throw this.unimplemented('Not implemented on web.');
   }

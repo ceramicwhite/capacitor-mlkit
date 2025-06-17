@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "capacitor-swift-pm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ionic-team/capacitor-swift-pm.git",
+      "state" : {
+        "revision" : "2cded5ffb2ff80d8add414b3d2a3c235eaced430",
+        "version" : "7.3.0"
+      }
+    },
+    {
+      "identity" : "whisper.spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ggml-org/whisper.spm.git",
+      "state" : {
+        "revision" : "a2085436c2eb796af90956b62bd64731f5e5b823",
+        "version" : "1.6.2"
+      }
+    }
+  ],
+  "version" : 2
+}
